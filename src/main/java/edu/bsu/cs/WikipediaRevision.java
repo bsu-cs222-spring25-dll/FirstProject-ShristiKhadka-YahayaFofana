@@ -19,4 +19,8 @@ public class WikipediaRevision
         return timestamp;
     }
 
+    @Override
+    public String toString() {
+        return "WikipediaRevision [username=" + username + ", timestamp=" + timestamp + "]";
+    }
 }

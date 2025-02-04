@@ -4,6 +4,6 @@ public class Main {
     public static void main(String[] args) {
         ConsoleView view = new ConsoleView();
         WikipediaController controller = new WikipediaController(view);
-        controller.handleUserInput(args);
+        controller.start();
     }
 }

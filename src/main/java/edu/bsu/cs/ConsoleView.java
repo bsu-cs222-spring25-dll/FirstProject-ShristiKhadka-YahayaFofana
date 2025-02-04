@@ -12,7 +12,13 @@ public class ConsoleView {
     }
 
     public static void displayRevisions(List<WikipediaRevision> revisions) {
-        System.out.println("\nRecent Wikipedia Edits:");
+
+        if (revisions == null || revisions.isEmpty()) {
+            System.out.println("No recent edits found.");
+            return;
+        }
+
+        System.out.println(System.lineSeparator()+"Recent Wikipedia Edits:");
         for (WikipediaRevision revision : revisions) {
             System.out.println(revision);
         }
@@ -21,6 +27,4 @@ public class ConsoleView {
     public static void displayError(String message) {
         System.err.println("Error: " + message);
     }
-
-
 }
