@@ -13,7 +13,7 @@ public class RevisionTest
         String timestamp="2025-01-30T12:00;00Z";
 
         //Act
-        Revision revision=new Revision(username,timestamp);
+        WikipediaRevision revision=new WikipediaRevision(username,timestamp);
 
         //Assert
         assertEquals(username,revision.getUsername());

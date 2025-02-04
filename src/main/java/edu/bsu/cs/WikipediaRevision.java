@@ -1,12 +1,12 @@
 package edu.bsu.cs;
 
-public class Revision
+public class WikipediaRevision
 {
     private final String username;
     private final String timestamp;
 
     //constructor
-    public Revision(String username, String timestamp){
+    public WikipediaRevision(String username, String timestamp){
         this.username = username;
         this.timestamp = timestamp;
     }
@@ -18,6 +18,5 @@ public class Revision
     public String getTimestamp() {
         return timestamp;
     }
-
 
 }
