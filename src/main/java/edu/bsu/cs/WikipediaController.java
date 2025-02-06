@@ -2,6 +2,8 @@ package edu.bsu.cs;
 
 import java.util.List;
 
+import static edu.bsu.cs.WikipediaApi.fetchWikipediaData;
+
 public class WikipediaController {
     private final ConsoleView view;
 
@@ -11,27 +13,24 @@ public class WikipediaController {
 
     public void start() {
         try {
-            // Step 1: Get the article title from the user
+            //  Get the article title from the user
             String articleTitle = ConsoleView.getUserInput();
 
-            // Step 2: Fetch JSON data from Wikipedia API
-            String jsonResponse = WikipediaApiClient.fetchWikipediaData(articleTitle);
+            // Fetch JSON data from Wikipedia API
+            String jsonResponse = fetchWikipediaData(articleTitle);
 
-            // Step 3: Parse JSON to extract revision data
-            List<WikipediaRevision> revisions = WikipediaParser.parseWikipediaResponse(jsonResponse);
+            // Parse JSON to extract revision data
+            List<WikipediaRevision> revisions = WikipediaRevisionParser.parseWikipediaResponse(jsonResponse);
 
-            // Step 4: Handle case where article is missing
+            // Handle case where article is missing
             if (revisions.isEmpty()) {
-                view.displayError("Wikipedia article not found.");
+                ConsoleView.displayError("Wikipedia article not found.");
             } else {
-                // Step 5: Format parsed revisions for display
-                String formattedRevisions = WikipediaRevisionFormatter.formatRevisions(revisions);
-
-                // Step 6: Display the formatted revisions
-                System.out.println(formattedRevisions);
+                //print output
+                ConsoleView.displayRevisions(revisions);
             }
         } catch (Exception e) {
-            view.displayError("Failed to retrieve Wikipedia data: " + e.getMessage());
+            ConsoleView.displayError("Failed to retrieve Wikipedia data: " + e.getMessage());
         }
     }
 }
