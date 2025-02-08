@@ -8,6 +8,7 @@ public class ConsoleView {
 
     public static String getUserInput() {
         System.out.print("Enter Wikipedia article title: ");
+
         return scanner.nextLine().trim();
     }
 
