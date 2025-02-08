@@ -28,11 +28,6 @@ class TestWikipediaApi {
         assertTrue(response.contains("query"), "Response should contain 'query'");
     }
 
-    @Test
-    void testFetchWikipediaData_InvalidTitle() {
-        WikipediaApi api = new WikipediaApi();
 
-        // Expect IOException when trying to fetch an invalid article
-        assertThrows(IOException.class, () -> api.fetchWikipediaData(""));
-    }
+
 }

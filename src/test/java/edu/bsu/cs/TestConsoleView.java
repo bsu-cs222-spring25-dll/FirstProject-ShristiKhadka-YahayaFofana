@@ -4,28 +4,30 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class TestConsoleView {
 
     @Test
+    void testUserInput() {
+        // Simulate user input
+        String simulatedInput = "Some Article Title\n";
+        InputStream inputStream = new ByteArrayInputStream(simulatedInput.getBytes());
+        System.setIn(inputStream);
 
-    public void testUserInput(){
-        String input = "Test Frank Zappa";
-
-        // Set up the input stream to simulate the user typing "Test Frank Zappa"
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(input.getBytes());
-        System.setIn(inputStream); // Ensure the input stream is set;
-
+        // when getUserInput() is called, it will read from the simulated input
         ConsoleView consoleView = new ConsoleView();
+        String result = consoleView.getUserInput();
 
-        String userInput = consoleView.getUserInput();
-
-        Assertions.assertEquals(input, userInput);
-
+        // Check if the result matches the simulated input
+        assertEquals("Some Article Title", result);
     }
+
 
     @Test
 
