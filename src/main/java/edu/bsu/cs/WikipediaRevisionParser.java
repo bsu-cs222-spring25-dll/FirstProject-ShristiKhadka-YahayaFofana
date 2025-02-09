@@ -15,11 +15,24 @@ public class WikipediaRevisionParser {
 
     // Validates JSON response and extracts the "pages" object
     private static JSONObject validateResponse(String jsonResponse) throws Exception {
+
         JSONObject jsonObject = new JSONObject(jsonResponse);
         JSONObject query = jsonObject.optJSONObject("query");
 
         if (query == null) {
             throw new Exception("Invalid response: 'query' not found.");
+        }
+
+        // Handle redirects
+        JSONArray redirects = query.optJSONArray("redirects");
+        if (redirects != null) {
+            for (int i = 0; i < redirects.length(); i++) {
+                JSONObject redirect = redirects.getJSONObject(i);
+                String from = redirect.optString("from", "Unknown");
+                String to = redirect.optString("to", "Unknown");
+                System.out.println("Redirect from " + from + " to " + to);
+            }
+
         }
 
         JSONObject pages = query.optJSONObject("pages");
@@ -32,12 +45,10 @@ public class WikipediaRevisionParser {
             if (page.has("missing")) {
                 throw new Exception("Error: Article not found.");
             }
-            if (page.has("redirects")) {
-                throw new Exception("Error: Article was redirected.");
-            }
         }
         return pages;
     }
+
 
     // Extracts revision data from JSON
     private static List<WikipediaRevision> extractRevisions(JSONObject pages) {

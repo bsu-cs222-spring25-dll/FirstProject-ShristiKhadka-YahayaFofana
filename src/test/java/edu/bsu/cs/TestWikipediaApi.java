@@ -27,7 +27,4 @@ class TestWikipediaApi {
         assertNotNull(response, "Response should not be null");
         assertTrue(response.contains("query"), "Response should contain 'query'");
     }
-
-
-
 }

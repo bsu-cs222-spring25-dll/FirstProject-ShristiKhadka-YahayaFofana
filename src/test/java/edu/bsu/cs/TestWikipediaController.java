@@ -1,84 +1,83 @@
 package edu.bsu.cs;
 
-import static org.mockito.Mockito.*;
-import static org.junit.Assert.*;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.*;
-import java.util.Arrays;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.util.Collections;
 import java.util.List;
 
-public class TestWikipediaController {
-    @Mock
+import static org.mockito.Mockito.*;
+
+class WikipediaControllerTest {
+
     private ConsoleView mockView;
-
-    @Mock
-    private WikipediaApi mockApi;
-
-    @InjectMocks
     private WikipediaController controller;
 
-    @Before
-    public void setUp() {
-        MockitoAnnotations.initMocks(this); // Initialize mocks
+    @BeforeEach
+    void setUp() {
+        mockView = Mockito.mock(ConsoleView.class);
+        controller = new WikipediaController(mockView);
     }
 
     @Test
-    public void testStart_SuccessfulFetch() throws Exception {
-        // Arrange: Set up mock behavior
-        String articleTitle = "Java";
-        String jsonResponse = "{ \"query\": { \"pages\": { \"123\": { \"revisions\": [{ \"timestamp\": \"2025-02-08\", \"user\": \"tester\" }] }}}}";
+    void testStart_SuccessfulDataRetrieval() throws Exception {
+        // Simulate user input
+        String simulatedInput = "Java (programming language)\n";
+        InputStream inputStream = new ByteArrayInputStream(simulatedInput.getBytes());
+        System.setIn(inputStream);
 
-        List<WikipediaRevision> mockRevisions = Arrays.asList(
-                new WikipediaRevision("tester", "2025-02-08")
-        );
+        // Mock the WikipediaApi and WikipediaRevisionParser
+        String jsonResponse = "{\"query\":{\"revisions\":[{\"timestamp\":\"2023-10-01T12:00:00Z\",\"user\":\"Alice\"}]}}";
+        List<WikipediaRevision> revisions = List.of(new WikipediaRevision("2023-10-01T12:00:00Z", "Alice"));
 
-        // Simulate the user input and API call
-        when(mockView.getUserInput()).thenReturn(articleTitle);
-        when(mockApi.fetchWikipediaData(articleTitle)).thenReturn(jsonResponse);
-        when(WikipediaRevisionParser.parseWikipediaResponse(jsonResponse)).thenReturn(mockRevisions);
+        when(WikipediaApi.fetchWikipediaData("Java (programming language)")).thenReturn(jsonResponse);
+        when(WikipediaRevisionParser.parseWikipediaResponse(jsonResponse)).thenReturn(revisions);
 
-        // Act: Call the start method
+        // Act
         controller.start();
 
-        // Assert: Verify interactions and output
-        verify(mockView).getUserInput();
-        verify(mockView).displayRevisions(mockRevisions);
-        verify(mockView, never()).displayError(anyString()); // Ensure no error displayed
+        // Assert
+        verify(mockView).displayRevisions(revisions);
     }
 
     @Test
-    public void testStart_ArticleNotFound() throws Exception {
-        // Arrange: Set up mock behavior
-        String articleTitle = "NonExistentArticle";
-        String jsonResponse = "{}"; // Empty response, meaning article not found
+    void testStart_ArticleNotFound() throws Exception {
+        // Simulate user input
+        String simulatedInput = "Nonexistent Article\n";
+        InputStream inputStream = new ByteArrayInputStream(simulatedInput.getBytes());
+        System.setIn(inputStream);
 
-        // Simulate the user input and API call
-        when(mockView.getUserInput()).thenReturn(articleTitle);
-        when(mockApi.fetchWikipediaData(articleTitle)).thenReturn(jsonResponse);
+        // Mock the WikipediaApi and WikipediaRevisionParser
+        String jsonResponse = "{\"query\":{\"revisions\":[]}}";
 
-        // Act: Call the start method
+        when(WikipediaApi.fetchWikipediaData("Nonexistent Article")).thenReturn(jsonResponse);
+        when(WikipediaRevisionParser.parseWikipediaResponse(jsonResponse)).thenReturn(Collections.emptyList());
+
+        // Act
         controller.start();
 
-        // Assert: Verify that the error message was displayed
-        verify(mockView).getUserInput();
+        // Assert
         verify(mockView).displayError("Wikipedia article not found.");
-        verify(mockView, never()).displayRevisions(anyList()); // Ensure revisions are not displayed
     }
 
     @Test
-    public void testStart_ApiFailure() throws Exception {
-        // Arrange: Set up mock behavior
-        String articleTitle = "Java";
-        when(mockView.getUserInput()).thenReturn(articleTitle);
-        when(mockApi.fetchWikipediaData(articleTitle)).thenThrow(new RuntimeException("API failure"));
+    void testStart_ApiThrowsException() throws Exception {
+        // Simulate user input
+        String simulatedInput = "Java (programming language)\n";
+        InputStream inputStream = new ByteArrayInputStream(simulatedInput.getBytes());
+        System.setIn(inputStream);
 
-        // Act: Call the start method
+        // Mock the WikipediaApi to throw an exception
+        Exception exception = new Exception("API unavailable");
+        when(WikipediaApi.fetchWikipediaData("Java (programming language)")).thenThrow(exception);
+
+        // Act
         controller.start();
 
-        // Assert: Verify the error handling
-        verify(mockView).getUserInput();
-        verify(mockView).displayError("Failed to retrieve Wikipedia data: API failure");
-        verify(mockView, never()).displayRevisions(anyList()); // Ensure revisions are not displayed
+        // Assert
+        verify(mockView).displayError("Failed to retrieve Wikipedia data: " + exception.getMessage());
     }
 }

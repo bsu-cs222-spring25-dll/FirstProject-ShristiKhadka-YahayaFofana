@@ -18,6 +18,7 @@ dependencies {
     testImplementation("org.mockito:mockito-core:3.+")
     testImplementation ("org.powermock:powermock-api-mockito2:2.0.9")  // PowerMockito integration with Mockito
     testImplementation ("org.powermock:powermock-module-junit4:2.0.9")  // PowerMockito for JUnit 4
+    //testImplementation ("org.mockito:mockito-inline:5.2.0")
 
     // JSON library (for your project)
     implementation("org.json:json:20210307")
