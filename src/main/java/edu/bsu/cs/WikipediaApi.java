@@ -11,8 +11,8 @@ import java.nio.charset.StandardCharsets;
 public class WikipediaApi {
     // Fetches JSON data from Wikipedia API based on the given article title
     public static String fetchWikipediaData(String articleTitle) throws IOException {
-        String apiUrl = buildWikipediaUrl(articleTitle);  // Build the URL separately
-        return getApiResponse(apiUrl);  // Handle API request separately
+        String apiUrl = buildWikipediaUrl(articleTitle);
+        return getApiResponse(apiUrl);
     }
 
     // Constructs the Wikipedia API URL
