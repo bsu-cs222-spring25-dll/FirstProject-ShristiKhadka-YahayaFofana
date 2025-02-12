@@ -20,8 +20,10 @@ public class ConsoleView {
         }
 
         System.out.println(System.lineSeparator()+"Recent Wikipedia Edits:");
+        int count = 1;
         for (WikipediaRevision revision : revisions) {
-            System.out.println(revision);
+            System.out.println(count + ". " + revision);
+            count++;
         }
     }
 
