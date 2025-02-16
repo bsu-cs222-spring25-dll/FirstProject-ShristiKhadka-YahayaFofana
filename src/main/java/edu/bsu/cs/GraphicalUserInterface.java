@@ -20,8 +20,6 @@ public class GraphicalUserInterface extends Application {
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Wikipedia Revision Viewer");
-
-
     }
 
     private void initializeComponents() {
@@ -60,8 +58,58 @@ public class GraphicalUserInterface extends Application {
                 statusLabel
         );
     }
+    private void setupEventHandlers() {
+        searchButton.setOnAction(e -> performSearch());
+    }
 
+    private void performSearch() {
+        String articleTitle = articleInput.getText().trim();
 
+        if (articleTitle.isEmpty()) {
+            showErrorDialog("Error", "Please enter an article title.");
+            return;
+        }
+
+        // Disable UI during search
+        setUIEnabled(false);
+        statusLabel.setText("Searching...");
+
+        // Create a new thread for the Wikipedia API call
+        Thread searchThread = new Thread(() -> {
+            try {
+                String jsonResponse = WikipediaApi.fetchWikipediaData(articleTitle);
+                List<WikipediaRevision> revisions = WikipediaRevisionParser.parseWikipediaResponse(jsonResponse);
+
+                Platform.runLater(() -> {
+                    revisionListView.getItems().clear();
+                    revisionListView.getItems().addAll(revisions);
+                    statusLabel.setText("Found " + revisions.size() + " revisions");
+                    setUIEnabled(true);
+                });
+            } catch (Exception e) {
+                Platform.runLater(() -> {
+                    showErrorDialog("Error", "Failed to retrieve Wikipedia data: " + e.getMessage());
+                    statusLabel.setText("Error occurred during search");
+                    setUIEnabled(true);
+                });
+            }
+        });
+
+        searchThread.start();
+    }
+    private void setUIEnabled(boolean enabled) {
+        articleInput.setDisable(!enabled);
+        searchButton.setDisable(!enabled);
+    }
+
+    private void showErrorDialog(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.initModality(Modality.APPLICATION_MODAL);
+        alert.showAndWait();
+    }
 
     public static void main(String[] args) {
         launch(args);
