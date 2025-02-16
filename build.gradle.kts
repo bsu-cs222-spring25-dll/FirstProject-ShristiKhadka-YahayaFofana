@@ -34,14 +34,11 @@ dependencies {
     // Mockito Dependency for mocking
     testImplementation("org.mockito:mockito-core:3.+")
     testImplementation ("org.powermock:powermock-api-mockito2:2.0.9")  // PowerMockito integration with Mockito
-   // testImplementation ("org.powermock:powermock-module-junit4:2.0.9")  // PowerMockito for JUnit 4
 
     // JSON library (for your project)
     implementation("org.json:json:20210307")
-   // testImplementation("junit:junit:4.13")
+
 }
-
-
 
 tasks.test {
     useJUnitPlatform() // Makes sure to use JUnit 5 platform
@@ -49,8 +46,6 @@ tasks.test {
 javafx {
     version = "22"
     modules("javafx.controls", "javafx.fxml","javafx.graphics")
-
-
 }
 application {
     mainClass.set("edu.bsu.cs.GraphicalUserInterface")
