@@ -20,6 +20,20 @@ public class GraphicalUserInterface extends Application {
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Wikipedia Revision Viewer");
+        // Initialize components
+        initializeComponents();
+
+        // Set up the main layout
+        setupMainLayout();
+
+        // Add event handlers
+        setupEventHandlers();
+
+        // Create and set the scene
+        Scene scene = new Scene(mainLayout, 600, 500);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+
     }
 
     private void initializeComponents() {
