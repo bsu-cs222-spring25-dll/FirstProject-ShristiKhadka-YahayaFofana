@@ -4,8 +4,11 @@ import org.json.JSONObject;
 import org.json.JSONArray;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class WikipediaRevisionParser {
+
+    private static String redirectInfo;
 
     // Parses JSON and returns a list of WikipediaRevision objects
     public static List<WikipediaRevision> parseWikipediaResponse(String jsonResponse) throws Exception {
@@ -33,17 +36,33 @@ public class WikipediaRevisionParser {
         return pages;
     }
 
-    // Handles Wikipedia redirects
+    // Handles Wikipedia redirects and captures redirect info
     private static void handleRedirects(JSONObject query) {
         JSONArray redirects = query.optJSONArray("redirects");
         if (redirects != null) {
+            StringBuilder redirectMessage = new StringBuilder();
+
             for (int i = 0; i < redirects.length(); i++) {
                 JSONObject redirect = redirects.getJSONObject(i);
                 String from = redirect.optString("from", "Unknown");
                 String to = redirect.optString("to", "Unknown");
+
+                if (i > 0) {
+                    redirectMessage.append("; ");
+                }
+                redirectMessage.append("Redirect from ").append(from).append(" to ").append(to);
+
+                // Also print to console for compatibility with console app
                 System.out.println("Redirect from " + from + " to " + to);
             }
+
+            redirectInfo = redirectMessage.toString();
         }
+    }
+
+    // Returns redirect information if available
+    public static Optional<String> getRedirectInfo() {
+        return Optional.ofNullable(redirectInfo);
     }
 
     // Checks if the requested article is missing

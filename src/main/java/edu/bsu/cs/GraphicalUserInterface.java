@@ -15,6 +15,7 @@ public class GraphicalUserInterface extends Application {
     private Button searchButton;
     private ListView<WikipediaRevision> revisionListView;
     private Label statusLabel;
+    private Label redirectLabel;
     private VBox mainLayout;
 
     @Override
@@ -33,7 +34,6 @@ public class GraphicalUserInterface extends Application {
         Scene scene = new Scene(mainLayout, 600, 500);
         primaryStage.setScene(scene);
         primaryStage.show();
-
     }
 
     private void initializeComponents() {
@@ -57,6 +57,10 @@ public class GraphicalUserInterface extends Application {
             }
         });
 
+        redirectLabel = new Label();
+        redirectLabel.setWrapText(true);
+        redirectLabel.setStyle("-fx-text-fill: blue;");
+
         statusLabel = new Label();
         statusLabel.setWrapText(true);
     }
@@ -68,12 +72,17 @@ public class GraphicalUserInterface extends Application {
                 new Label("Wikipedia Article Title:"),
                 articleInput,
                 searchButton,
+                redirectLabel,
                 revisionListView,
                 statusLabel
         );
     }
+
     private void setupEventHandlers() {
         searchButton.setOnAction(e -> performSearch());
+
+        // Add event handler for the Enter key
+        articleInput.setOnAction(e -> performSearch());
     }
 
     private void performSearch() {
@@ -87,6 +96,7 @@ public class GraphicalUserInterface extends Application {
         // Disable UI during search
         setUIEnabled(false);
         statusLabel.setText("Searching...");
+        redirectLabel.setText("");
 
         // Create a new thread for the Wikipedia API call
         Thread searchThread = new Thread(() -> {
@@ -98,6 +108,12 @@ public class GraphicalUserInterface extends Application {
                     revisionListView.getItems().clear();
                     revisionListView.getItems().addAll(revisions);
                     statusLabel.setText("Found " + revisions.size() + " revisions");
+
+                    // Display redirect information if available
+                    WikipediaRevisionParser.getRedirectInfo().ifPresent(redirectInfo -> {
+                        redirectLabel.setText(redirectInfo);
+                    });
+
                     setUIEnabled(true);
                 });
             } catch (Exception e) {
@@ -111,6 +127,7 @@ public class GraphicalUserInterface extends Application {
 
         searchThread.start();
     }
+
     private void setUIEnabled(boolean enabled) {
         articleInput.setDisable(!enabled);
         searchButton.setDisable(!enabled);
