@@ -19,6 +19,7 @@ public class GraphicalUserInterface extends Application {
     private VBox mainLayout;
 
     @Override
+    //Main method that sets up the window
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Wikipedia Revision Viewer");
         // Initialize components
@@ -36,6 +37,7 @@ public class GraphicalUserInterface extends Application {
         primaryStage.show();
     }
 
+    //Creates all UI elements
     private void initializeComponents() {
         articleInput = new TextField();
         articleInput.setPromptText("Enter Wikipedia article title");
@@ -65,6 +67,7 @@ public class GraphicalUserInterface extends Application {
         statusLabel.setWrapText(true);
     }
 
+   //Organizes elements in a vertical layout
     private void setupMainLayout() {
         mainLayout = new VBox(10);
         mainLayout.setPadding(new Insets(10));
@@ -78,6 +81,7 @@ public class GraphicalUserInterface extends Application {
         );
     }
 
+    // Connects user actions to functionality
     private void setupEventHandlers() {
         searchButton.setOnAction(e -> performSearch());
 
