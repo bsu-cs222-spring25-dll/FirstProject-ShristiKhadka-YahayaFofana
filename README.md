@@ -17,3 +17,5 @@ If the article doesn’t exist or has been renamed, it should handle redirects p
 Features: Fetches real-time Wikipedia revision data
 Displays edit history with timestamps and editor names
 Handles redirects and invalid inputs .Simple, console-based interface
+
+There are two main entry points, you can run it either using GUI or main. To run the GUI, you need to use the GraphicalUserInterface class which is where the GUI is present to interact with the code. Whereas, to run it on console, then you would have to run it in the Main class.
