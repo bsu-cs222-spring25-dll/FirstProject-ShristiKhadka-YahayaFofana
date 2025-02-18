@@ -50,7 +50,7 @@ public class GraphicalUserInterface extends Application {
                 if (empty || revision == null) {
                     setText(null);
                 } else {
-                    setText(String.format("Editor: %s\nTimestamp: %s\n",
+                    setText(String.format("Username: %s\nTimestamp: %s\n",
                             revision.getUsername(),
                             revision.getTimestamp()));
                 }
@@ -118,7 +118,7 @@ public class GraphicalUserInterface extends Application {
                 });
             } catch (Exception e) {
                 Platform.runLater(() -> {
-                    showErrorDialog("Error", "Failed to retrieve Wikipedia data: " + e.getMessage());
+                    showErrorDialog("Error", "Failed to retrieve Wikipedia data (Check Internet Connection): " + e.getMessage());
                     statusLabel.setText("Error occurred during search");
                     setUIEnabled(true);
                 });
